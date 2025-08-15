@@ -13,139 +13,29 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-// Custom Ripple Effect for both desktop and mobile
+// Ripple effect for hero section (desktop only)
 $(document).ready(function() {
-  const hero = $('.hero');
+  // Check if device is mobile/touch
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 'ontouchstart' in window;
   
-  // Create canvas for ripple effect
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.style.position = 'absolute';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.style.pointerEvents = 'none';
-  canvas.style.zIndex = '1';
-  
-  // Add canvas to hero
-  hero.css('position', 'relative');
-  hero.append(canvas);
-  
-  // Set canvas size
-  function resizeCanvas() {
-    const rect = hero[0].getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-  }
-  
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  
-  // Ripple class
-  class Ripple {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.radius = 0;
-      this.maxRadius = Math.max(canvas.width, canvas.height) * 0.3;
-      this.opacity = 0.8;
-      this.speed = 4;
-      this.color = `hsl(${Math.random() * 60 + 200}, 70%, 60%)`; // Random blue-cyan colors
-    }
-    
-    update() {
-      this.radius += this.speed;
-      this.opacity -= 0.015;
-      return this.opacity > 0;
-    }
-    
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.opacity;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = 3;
-      ctx.stroke();
-      
-      // Add inner circle for better effect
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius * 0.3, 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-  
-  let ripples = [];
-  let animationId;
-  
-  // Animation loop
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    ripples = ripples.filter(ripple => {
-      ripple.draw();
-      return ripple.update();
+  if (!isMobile) {
+    // Only initialize ripples on desktop
+    $('.hero').ripples({
+      resolution: 512,
+      dropRadius: 20,
+      perturbance: 0.04
     });
-    
-    if (ripples.length > 0) {
-      animationId = requestAnimationFrame(animate);
-    }
+
+    $('.hero').on('click', function(e) {
+      var $el = $(this);
+      var x = e.pageX - $el.offset().left;
+      var y = e.pageY - $el.offset().top;
+      var dropRadius = 20;
+      var strength = 0.04 + Math.random() * 0.04;
+
+      $el.ripples('drop', x, y, dropRadius, strength);
+    });
   }
-  
-  // Handle click/touch events
-  function createRipple(e) {
-    const rect = canvas.getBoundingClientRect();
-    let x, y;
-    
-    if (e.type.includes('touch')) {
-      x = e.touches[0].clientX - rect.left;
-      y = e.touches[0].clientY - rect.top;
-    } else {
-      x = e.clientX - rect.left;
-      y = e.clientY - rect.top;
-    }
-    
-    ripples.push(new Ripple(x, y));
-    
-    if (ripples.length === 1) {
-      animate();
-    }
-  }
-  
-  // Add event listeners for both desktop and mobile
-  hero.on('click touchstart', function(e) {
-    e.preventDefault();
-    createRipple(e);
-  });
-  
-  // Add multiple ripples on touch move for mobile (with throttling)
-  let lastTouchTime = 0;
-  hero.on('touchmove', function(e) {
-    e.preventDefault();
-    const now = Date.now();
-    if (now - lastTouchTime > 100 && e.touches.length > 0) { // Throttle to 100ms
-      createRipple(e);
-      lastTouchTime = now;
-    }
-  });
-  
-  // Add ripple on touch end for better mobile experience
-  hero.on('touchend', function(e) {
-    if (e.changedTouches.length > 0) {
-      const touch = e.changedTouches[0];
-      const rect = canvas.getBoundingClientRect();
-      const x = touch.clientX - rect.left;
-      const y = touch.clientY - rect.top;
-      
-      ripples.push(new Ripple(x, y));
-      if (ripples.length === 1) {
-        animate();
-      }
-    }
-  });
 });
 
 // Form submission handler
