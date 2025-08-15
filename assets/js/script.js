@@ -13,23 +13,43 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-// Ripple effect for hero section
+// Ripple effect for hero section (desktop only)
 $(document).ready(function() {
-  $('.hero').ripples({
-    resolution: 512,
-    dropRadius: 20,
-    perturbance: 0.04
-  });
+  // Check if device is mobile/touch
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 'ontouchstart' in window;
+  
+  if (!isMobile) {
+    // Only initialize ripples on desktop
+    $('.hero').ripples({
+      resolution: 512,
+      dropRadius: 20,
+      perturbance: 0.04
+    });
 
-  $('.hero').on('click', function(e) {
-    var $el = $(this);
-    var x = e.pageX - $el.offset().left;
-    var y = e.pageY - $el.offset().top;
-    var dropRadius = 20;
-    var strength = 0.04 + Math.random() * 0.04;
+    $('.hero').on('click', function(e) {
+      var $el = $(this);
+      var x = e.pageX - $el.offset().left;
+      var y = e.pageY - $el.offset().top;
+      var dropRadius = 20;
+      var strength = 0.04 + Math.random() * 0.04;
 
-    $el.ripples('drop', x, y, dropRadius, strength);
-  });
+      $el.ripples('drop', x, y, dropRadius, strength);
+    });
+  } else {
+    // Mobile alternative: touch effect
+    $('.hero').addClass('mobile-hero');
+    
+    // Add touch effect for mobile
+    $('.hero').on('touchstart', function(e) {
+      $(this).addClass('touch-active');
+    });
+    
+    $('.hero').on('touchend', function(e) {
+      setTimeout(() => {
+        $(this).removeClass('touch-active');
+      }, 300);
+    });
+  }
 });
 
 // Form submission handler
