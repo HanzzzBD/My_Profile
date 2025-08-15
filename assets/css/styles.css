@@ -94,28 +94,10 @@ header{
     background:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop') center/cover;
 }
 
-/* Mobile hero alternative */
-.mobile-hero {
-    position: relative;
-    overflow: hidden;
-}
-
-.mobile-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(0,68,255,0.1), rgba(183,0,255,0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
-.mobile-hero:active::before,
-.mobile-hero.touch-active::before {
-    opacity: 1;
+/* Canvas ripple effect */
+.hero canvas {
+    border-radius: 0;
+    mix-blend-mode: screen;
 }
 .hero > .container{
     display:grid; 
