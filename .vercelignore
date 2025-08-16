@@ -1,0 +1,10 @@
+# Ignore files yang tidak perlu
+node_modules/
+.env
+.env.local
+.DS_Store
+*.log
+
+# Pastikan video tidak di-ignore
+!assets/video/
+!assets/video/*.mp4

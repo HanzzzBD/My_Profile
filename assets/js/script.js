@@ -1,6 +1,42 @@
 // Update copyright year
 document.getElementById('year').textContent = new Date().getFullYear();
 
+// Video loading handler for Vercel
+document.addEventListener('DOMContentLoaded', function() {
+  const video = document.querySelector('.hero-video');
+  const fallback = document.querySelector('.video-fallback');
+  
+  if (video) {
+    // Cek apakah video bisa dimuat
+    video.addEventListener('error', function() {
+      console.log('Video tidak bisa dimuat, menggunakan fallback');
+      if (fallback) {
+        fallback.style.display = 'block';
+      }
+    });
+    
+    // Cek apakah video berhasil dimuat
+    video.addEventListener('loadeddata', function() {
+      console.log('Video berhasil dimuat');
+      if (fallback) {
+        fallback.style.display = 'none';
+      }
+    });
+    
+    // Fallback jika video tidak bisa autoplay
+    video.addEventListener('loadstart', function() {
+      setTimeout(() => {
+        if (video.readyState === 0) {
+          console.log('Video tidak bisa dimuat, menggunakan fallback');
+          if (fallback) {
+            fallback.style.display = 'block';
+          }
+        }
+      }, 3000);
+    });
+  }
+});
+
 // Smooth scroll for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
