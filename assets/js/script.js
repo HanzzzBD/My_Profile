@@ -1,36 +1,30 @@
 // Update copyright year
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Video loading handler for Vercel
+// Video loading handler with fallback
 document.addEventListener('DOMContentLoaded', function() {
   const video = document.querySelector('.hero-video');
-  const fallback = document.querySelector('.video-fallback');
+  const fallback = document.querySelector('.hero-background');
   
-  if (video) {
+  if (video && fallback) {
     // Cek apakah video bisa dimuat
     video.addEventListener('error', function() {
-      console.log('Video tidak bisa dimuat, menggunakan fallback');
-      if (fallback) {
-        fallback.style.display = 'block';
-      }
+      console.log('Video tidak bisa dimuat, menggunakan background fallback');
+      fallback.style.display = 'block';
     });
     
     // Cek apakah video berhasil dimuat
     video.addEventListener('loadeddata', function() {
       console.log('Video berhasil dimuat');
-      if (fallback) {
-        fallback.style.display = 'none';
-      }
+      fallback.style.display = 'none';
     });
     
     // Fallback jika video tidak bisa autoplay
     video.addEventListener('loadstart', function() {
       setTimeout(() => {
         if (video.readyState === 0) {
-          console.log('Video tidak bisa dimuat, menggunakan fallback');
-          if (fallback) {
-            fallback.style.display = 'block';
-          }
+          console.log('Video tidak bisa dimuat, menggunakan background fallback');
+          fallback.style.display = 'block';
         }
       }, 3000);
     });
