@@ -108,6 +108,12 @@ header {
   height: 100%;
   object-fit: cover;
   z-index: -2;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.hero-video.loaded {
+  opacity: 1;
 }
 
 .hero-background {
@@ -120,7 +126,7 @@ header {
   background-size: 400% 400%;
   animation: gradient-shift 8s ease infinite;
   z-index: -2;
-  display: none; /* Hidden by default, shown when video fails */
+  display: block; /* Show by default, hide when video loads */
 }
 
 @keyframes gradient-shift {

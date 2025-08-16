@@ -7,15 +7,20 @@ document.addEventListener('DOMContentLoaded', function() {
   const fallback = document.querySelector('.hero-background');
   
   if (video && fallback) {
+    // Show fallback by default
+    fallback.style.display = 'block';
+    
     // Cek apakah video bisa dimuat
     video.addEventListener('error', function() {
       console.log('Video tidak bisa dimuat, menggunakan background fallback');
       fallback.style.display = 'block';
+      video.style.display = 'none';
     });
     
     // Cek apakah video berhasil dimuat
     video.addEventListener('loadeddata', function() {
       console.log('Video berhasil dimuat');
+      video.classList.add('loaded');
       fallback.style.display = 'none';
     });
     
@@ -25,8 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (video.readyState === 0) {
           console.log('Video tidak bisa dimuat, menggunakan background fallback');
           fallback.style.display = 'block';
+          video.style.display = 'none';
         }
-      }, 3000);
+      }, 5000); // Wait 5 seconds
+    });
+    
+    // Hide fallback when video starts playing
+    video.addEventListener('play', function() {
+      fallback.style.display = 'none';
     });
   }
 });
