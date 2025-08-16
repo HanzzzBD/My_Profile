@@ -4,40 +4,35 @@ document.getElementById('year').textContent = new Date().getFullYear();
 // Video loading handler with fallback
 document.addEventListener('DOMContentLoaded', function() {
   const video = document.querySelector('.hero-video');
-  const fallback = document.querySelector('.hero-background');
+  const fallback = document.querySelector('.video-fallback');
   
-  if (video && fallback) {
-    // Show fallback by default
-    fallback.style.display = 'block';
-    
+  if (video) {
     // Cek apakah video bisa dimuat
     video.addEventListener('error', function() {
-      console.log('Video tidak bisa dimuat, menggunakan background fallback');
-      fallback.style.display = 'block';
-      video.style.display = 'none';
+      console.log('Video tidak bisa dimuat, menggunakan fallback');
+      if (fallback) {
+        fallback.style.display = 'block';
+      }
     });
     
     // Cek apakah video berhasil dimuat
     video.addEventListener('loadeddata', function() {
       console.log('Video berhasil dimuat');
-      video.classList.add('loaded');
-      fallback.style.display = 'none';
+      if (fallback) {
+        fallback.style.display = 'none';
+      }
     });
     
     // Fallback jika video tidak bisa autoplay
     video.addEventListener('loadstart', function() {
       setTimeout(() => {
         if (video.readyState === 0) {
-          console.log('Video tidak bisa dimuat, menggunakan background fallback');
-          fallback.style.display = 'block';
-          video.style.display = 'none';
+          console.log('Video tidak bisa dimuat, menggunakan fallback');
+          if (fallback) {
+            fallback.style.display = 'block';
+          }
         }
-      }, 5000); // Wait 5 seconds
-    });
-    
-    // Hide fallback when video starts playing
-    video.addEventListener('play', function() {
-      fallback.style.display = 'none';
+      }, 3000);
     });
   }
 });
